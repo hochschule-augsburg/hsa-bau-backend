@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_06txg7m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_06txg7m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
   <bpmn:process id="bauprozess" isExecutable="true">
     <bpmn:startEvent id="StartEvent_AnfrageErhalten" name="Anfrage erhalten">
       <bpmn:outgoing>Flow_1h6snud</bpmn:outgoing>
@@ -16,31 +16,52 @@
     <bpmn:endEvent id="Event_BauvorhabenErledigt" name="Bauvorhaben erledigt">
       <bpmn:incoming>Flow_0diqzhd</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_11j1dkt" sourceRef="Task_BauvorhabenPlanen" targetRef="Activity_1t205t6" />
+    <bpmn:sequenceFlow id="Flow_11j1dkt" sourceRef="Task_BauvorhabenPlanen" targetRef="Gateway_0w59lm1" />
     <bpmn:sequenceFlow id="Flow_1h6snud" sourceRef="StartEvent_AnfrageErhalten" targetRef="Task_AngebotBearbeiten" />
     <bpmn:sequenceFlow id="Flow_0diqzhd" sourceRef="Activity_1t205t6" targetRef="Event_BauvorhabenErledigt" />
     <bpmn:serviceTask id="Activity_1t205t6" name="Test ausführen" camunda:delegateExpression="${testDelegate}">
-      <bpmn:incoming>Flow_11j1dkt</bpmn:incoming>
+      <bpmn:incoming>Flow_091ppb9</bpmn:incoming>
       <bpmn:outgoing>Flow_0diqzhd</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0w59lm1" default="Flow_1sfkw4z">
+      <bpmn:incoming>Flow_11j1dkt</bpmn:incoming>
+      <bpmn:outgoing>Flow_091ppb9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1sfkw4z</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_091ppb9" sourceRef="Gateway_0w59lm1" targetRef="Activity_1t205t6">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${doIt}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1tru34l">
+      <bpmn:incoming>Flow_1sfkw4z</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1sfkw4z" sourceRef="Gateway_0w59lm1" targetRef="Event_1tru34l" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="bauprozess">
-      <bpmndi:BPMNEdge id="Flow_1dsbjny_di" bpmnElement="Flow_1dsbjny">
-        <di:waypoint x="390" y="120" />
-        <di:waypoint x="430" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_11j1dkt_di" bpmnElement="Flow_11j1dkt">
-        <di:waypoint x="530" y="120" />
-        <di:waypoint x="590" y="120" />
+      <bpmndi:BPMNEdge id="Flow_0diqzhd_di" bpmnElement="Flow_0diqzhd">
+        <di:waypoint x="820" y="120" />
+        <di:waypoint x="872" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1h6snud_di" bpmnElement="Flow_1h6snud">
         <di:waypoint x="248" y="120" />
         <di:waypoint x="290" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0diqzhd_di" bpmnElement="Flow_0diqzhd">
-        <di:waypoint x="690" y="120" />
-        <di:waypoint x="792" y="120" />
+      <bpmndi:BPMNEdge id="Flow_11j1dkt_di" bpmnElement="Flow_11j1dkt">
+        <di:waypoint x="530" y="120" />
+        <di:waypoint x="585" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dsbjny_di" bpmnElement="Flow_1dsbjny">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="430" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_091ppb9_di" bpmnElement="Flow_091ppb9">
+        <di:waypoint x="635" y="120" />
+        <di:waypoint x="720" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sfkw4z_di" bpmnElement="Flow_1sfkw4z">
+        <di:waypoint x="610" y="145" />
+        <di:waypoint x="610" y="230" />
+        <di:waypoint x="722" y="230" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_AnfrageErhalten">
         <dc:Bounds x="212" y="102" width="36" height="36" />
@@ -55,13 +76,19 @@
         <dc:Bounds x="430" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0wotrv9_di" bpmnElement="Event_BauvorhabenErledigt">
-        <dc:Bounds x="792" y="102" width="36" height="36" />
+        <dc:Bounds x="872" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="777" y="145" width="66" height="27" />
+          <dc:Bounds x="857" y="145" width="66" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0rosi1j_di" bpmnElement="Activity_1t205t6">
-        <dc:Bounds x="590" y="80" width="100" height="80" />
+        <dc:Bounds x="720" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0w59lm1_di" bpmnElement="Gateway_0w59lm1" isMarkerVisible="true">
+        <dc:Bounds x="585" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1tru34l_di" bpmnElement="Event_1tru34l">
+        <dc:Bounds x="722" y="212" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
