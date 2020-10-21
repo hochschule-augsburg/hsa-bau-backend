@@ -26,11 +26,11 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
   @Test
   public void shouldExecuteHappyPath() {
 
-    doNothing().when(testService).doSomething();
+   // doNothing().when(testService).doSomething();
 
     String processDefinitionKey = "bauprozess";
 
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
 
     assertThat(processInstance).isStarted()
         .task()
@@ -42,42 +42,23 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
     assertThat(processInstance)
             .isWaitingAt("Task_BauvorhabenPlanen");
 
-    complete(task(), withVariables("doIt", true));
+    complete(task());
 
     assertThat(processInstance)
-            .isEnded();
-
-
-    verify(testService, times(1)).doSomething();
-  }
-
-
-  @Test
-  public void shouldDoNothing() {
-
-    doNothing().when(testService).doSomething();
-
-    String processDefinitionKey = "bauprozess";
-
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
-
-    assertThat(processInstance).isStarted()
-            .task()
-            .hasDefinitionKey("Task_AngebotBearbeiten")
-            .isNotAssigned();
+            .isWaitingAt("Task_AuftragBestaetigen");
 
     complete(task());
 
     assertThat(processInstance)
-            .isWaitingAt("Task_BauvorhabenPlanen");
+            .isWaitingAt("Task_LnAbschliessen");
 
-    complete(task(), withVariables("doIt", false));
+    complete(task(), withVariables("reportSigned", true));
 
     assertThat(processInstance)
             .isEnded();
 
 
-    assertThat(processInstance).hasNotPassed("Activity_1t205t6");
+   // verify(testService, times(1)).doSomething();
   }
 
 }
