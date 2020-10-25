@@ -24,9 +24,14 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
   private TestService testService;
 
   @Test
-  public void shouldExecuteHappyPath() {
+  public void shouldExecuteOrderSignedPath() {
+    /*
+    **************************************
+    * Path: with order and signed report
+    * ************************************
+    * */
 
-   // doNothing().when(testService).doSomething();
+    //  doNothing().when(testService).doSomething();
 
     String processDefinitionKey = "bauprozess";
 
@@ -36,29 +41,188 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
         .task()
         .hasDefinitionKey("Task_AngebotBearbeiten")
         .isNotAssigned();
-
     complete(task());
 
     assertThat(processInstance)
-            .isWaitingAt("Task_BauvorhabenPlanen");
-
+        .isWaitingAt("Task_BauvorhabenPlanen");
     complete(task());
 
     assertThat(processInstance)
-            .isWaitingAt("Task_AuftragBestaetigen");
-
+        .isWaitingAt("Task_AuftragBestaetigen");
     complete(task());
 
     assertThat(processInstance)
-            .isWaitingAt("Task_LnAbschliessen");
-
+        .isWaitingAt("Task_LnAbschliessen");
     complete(task(), withVariables("reportSigned", true));
 
     assertThat(processInstance)
-            .isEnded();
+        .isWaitingAt("Task_LnKontrollieren");
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("StartEvent", "Task_AngebotBearbeiten", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKontrollieren");
+
+    //  verify(testService, times(1)).doSomething();
+
+  }
+
+  @Test
+  public void shouldExecuteOrderUnSignedPath() {
+    /*
+    **************************************
+    * Path: with order and unsigned report
+    * ************************************
+    * */
+
+    String processDefinitionKey = "bauprozess";
+
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
+
+    assertThat(processInstance).isStarted()
+        .task()
+        .hasDefinitionKey("Task_AngebotBearbeiten")
+        .isNotAssigned();
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_BauvorhabenPlanen");
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_AuftragBestaetigen");
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnAbschliessen");
+    complete(task(), withVariables("reportSigned", false));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnKlaeren");
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("StartEvent", "Task_AngebotBearbeiten", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
+
+  }
+
+  @Test
+  public void shouldExecuteNoOrderSignedPath() {
+    /*
+    **************************************
+    * Path: with no order and signed report
+    * ************************************
+    * */
+
+    String processDefinitionKey = "bauprozess";
+
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", false));
+
+    assertThat(processInstance).isStarted()
+        .task()
+        .hasDefinitionKey("Task_BauvorhabenPlanen")
+        .isNotAssigned();
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_AuftragBestaetigen");
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnAbschliessen");
+    complete(task(), withVariables("reportSigned", true));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnKontrollieren");
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("StartEvent", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKontrollieren");
+
+  }
+
+  @Test
+  public void shouldExecuteNoOrderUnSignedPath() {
+    /*
+    **************************************
+    * Path: with no order and unsigned report
+    * ************************************
+    * */
+
+    String processDefinitionKey = "bauprozess";
+
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", false));
+
+    assertThat(processInstance).isStarted()
+        .task()
+        .hasDefinitionKey("Task_BauvorhabenPlanen")
+        .isNotAssigned();
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_AuftragBestaetigen");
+    complete(task());
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnAbschliessen");
+    complete(task(), withVariables("reportSigned", false));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_LnKlaeren");
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded()
+        .hasPassed("StartEvent", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
+
+  }
+
+  @Test
+  public void shouldExecuteOrderSlowPath() {
+    /*
+     **************************************
+     * Path: with order and reminder
+     * ************************************
+     * */
+
+    String processDefinitionKey = "bauprozess";
+
+   /* ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
+
+    assertThat(processInstance).isStarted()
+        .task()
+        .hasDefinitionKey("Task_AngebotBearbeiten")
+        .isNotAssigned();
+
+    assertThat(processInstance)
+        .job("TimerEvent_ReminderOffer");
+    execute(job());
+
+    complete(task());
+
+    assertThat(processInstance)
+        .isEnded();*/
+
+    ProcessInstance instance = runtimeService().createProcessInstanceByKey(processDefinitionKey)
+        .startBeforeActivity("Task_AngebotBearbeiten")
+        .execute();
+
+    assertThat(instance)
+        .job("TimerEvent_ReminderOffer");
+    execute(job());
+
+    complete(task());
+
+    ProcessInstance subInstance = runtimeService().createProcessInstanceByKey(processDefinitionKey)
+        .startBeforeActivity("Task_Test")
+        .execute();
+
+    assertThat(subInstance)
+        .isEnded();
 
 
-   // verify(testService, times(1)).doSomething();
   }
 
 }

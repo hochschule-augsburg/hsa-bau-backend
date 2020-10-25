@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_06txg7m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.3.0">
   <bpmn:process id="bauprozess" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_AnfrageErhalten" name="Anfrage erhalten">
+    <bpmn:startEvent id="StartEvent" name="Anfrage erhalten">
       <bpmn:outgoing>Flow_1h6snud</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_AngebotBearbeiten" name="Angebot bearbeiten">
-      <bpmn:incoming>Flow_0bc7l0l</bpmn:incoming>
-      <bpmn:outgoing>Flow_1dsbjny</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1dsbjny" sourceRef="Task_AngebotBearbeiten" targetRef="Task_BauvorhabenPlanen" />
     <bpmn:userTask id="Task_BauvorhabenPlanen" name="Bauvorhaben planen">
       <bpmn:incoming>Flow_1dsbjny</bpmn:incoming>
       <bpmn:incoming>Flow_127yzeh</bpmn:incoming>
       <bpmn:outgoing>Flow_01gm6ft</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_1h6snud" sourceRef="StartEvent_AnfrageErhalten" targetRef="Gateway_1ntbjg0" />
-    <bpmn:exclusiveGateway id="Gateway_1ntbjg0" default="Flow_0bc7l0l">
+    <bpmn:sequenceFlow id="Flow_1h6snud" sourceRef="StartEvent" targetRef="Gateway_1ntbjg0" />
+    <bpmn:exclusiveGateway id="Gateway_1ntbjg0" name="Angebot erforderlich?" default="Flow_0bc7l0l">
       <bpmn:incoming>Flow_1h6snud</bpmn:incoming>
       <bpmn:outgoing>Flow_0bc7l0l</bpmn:outgoing>
       <bpmn:outgoing>Flow_127yzeh</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0bc7l0l" sourceRef="Gateway_1ntbjg0" targetRef="Task_AngebotBearbeiten" />
-    <bpmn:sequenceFlow id="Flow_127yzeh" sourceRef="Gateway_1ntbjg0" targetRef="Task_BauvorhabenPlanen">
+    <bpmn:sequenceFlow id="Flow_127yzeh" name="nein" sourceRef="Gateway_1ntbjg0" targetRef="Task_BauvorhabenPlanen">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!offerRequired}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_01gm6ft" sourceRef="Task_BauvorhabenPlanen" targetRef="Task_AuftragBestaetigen" />
@@ -30,97 +26,173 @@
       <bpmn:outgoing>Flow_1ngonb8</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1ngonb8" sourceRef="Task_AuftragBestaetigen" targetRef="Task_LnAbschliessen" />
-    <bpmn:userTask id="Task_LnAbschliessen" name="Leistungsnachweis abschließen">
+    <bpmn:userTask id="Task_LnAbschliessen" name="Leistungs-nachweis abschließen">
       <bpmn:incoming>Flow_1ngonb8</bpmn:incoming>
       <bpmn:outgoing>Flow_1gn1mz8</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_02ksvk7" default="Flow_089x4hs">
+    <bpmn:exclusiveGateway id="Gateway_02ksvk7" name="Nachweis unterschrieben?" default="Flow_089x4hs">
       <bpmn:incoming>Flow_1gn1mz8</bpmn:incoming>
-      <bpmn:outgoing>Flow_089x4hs</bpmn:outgoing>
       <bpmn:outgoing>Flow_0phl21t</bpmn:outgoing>
+      <bpmn:outgoing>Flow_089x4hs</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1gn1mz8" sourceRef="Task_LnAbschliessen" targetRef="Gateway_02ksvk7" />
     <bpmn:endEvent id="Event_1p9aa2b">
-      <bpmn:incoming>Flow_089x4hs</bpmn:incoming>
+      <bpmn:incoming>Flow_0i4tl3q</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_089x4hs" sourceRef="Gateway_02ksvk7" targetRef="Event_1p9aa2b" />
     <bpmn:endEvent id="Event_0ixlibz">
-      <bpmn:incoming>Flow_0phl21t</bpmn:incoming>
+      <bpmn:incoming>Flow_0j3xqpn</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0phl21t" sourceRef="Gateway_02ksvk7" targetRef="Event_0ixlibz">
+    <bpmn:sequenceFlow id="Flow_0phl21t" name="nein" sourceRef="Gateway_02ksvk7" targetRef="Task_LnKlaeren">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!reportSigned}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_089x4hs" sourceRef="Gateway_02ksvk7" targetRef="Task_LnKontrollieren" />
+    <bpmn:userTask id="Task_AngebotBearbeiten" name="Angebot bearbeiten">
+      <bpmn:incoming>Flow_0bc7l0l</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dsbjny</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_0mquu3v">
+      <bpmn:incoming>Flow_1t25tor</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_063oyx7" sourceRef="TimerEvent_ReminderOffer" targetRef="Task_Test" />
+    <bpmn:sequenceFlow id="Flow_0i4tl3q" sourceRef="Task_LnKontrollieren" targetRef="Event_1p9aa2b" />
+    <bpmn:userTask id="Task_LnKontrollieren" name="Leistungs-&#10;nachweis kontrollieren">
+      <bpmn:incoming>Flow_089x4hs</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i4tl3q</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0j3xqpn" sourceRef="Task_LnKlaeren" targetRef="Event_0ixlibz" />
+    <bpmn:userTask id="Task_LnKlaeren" name="Leistungs-nachweis&#10;klären">
+      <bpmn:incoming>Flow_0phl21t</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j3xqpn</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="TimerEvent_ReminderOffer" name="3 Tage" cancelActivity="false" attachedToRef="Task_AngebotBearbeiten">
+      <bpmn:outgoing>Flow_063oyx7</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_15mmoia">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P3D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1t25tor" sourceRef="Task_Test" targetRef="Event_0mquu3v" />
+    <bpmn:userTask id="Task_Test" name="test">
+      <bpmn:incoming>Flow_063oyx7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t25tor</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="bauprozess">
-      <bpmndi:BPMNEdge id="Flow_1h6snud_di" bpmnElement="Flow_1h6snud">
-        <di:waypoint x="208" y="120" />
-        <di:waypoint x="255" y="120" />
+      <bpmndi:BPMNEdge id="Flow_1t25tor_di" bpmnElement="Flow_1t25tor">
+        <di:waypoint x="620" y="300" />
+        <di:waypoint x="722" y="300" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1dsbjny_di" bpmnElement="Flow_1dsbjny">
-        <di:waypoint x="450" y="120" />
-        <di:waypoint x="520" y="120" />
+      <bpmndi:BPMNEdge id="Flow_0j3xqpn_di" bpmnElement="Flow_0j3xqpn">
+        <di:waypoint x="1260" y="330" />
+        <di:waypoint x="1312" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0bc7l0l_di" bpmnElement="Flow_0bc7l0l">
-        <di:waypoint x="305" y="120" />
-        <di:waypoint x="350" y="120" />
+      <bpmndi:BPMNEdge id="Flow_0i4tl3q_di" bpmnElement="Flow_0i4tl3q">
+        <di:waypoint x="1260" y="180" />
+        <di:waypoint x="1312" y="180" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_127yzeh_di" bpmnElement="Flow_127yzeh">
-        <di:waypoint x="280" y="95" />
-        <di:waypoint x="280" y="40" />
-        <di:waypoint x="570" y="40" />
-        <di:waypoint x="570" y="80" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01gm6ft_di" bpmnElement="Flow_01gm6ft">
-        <di:waypoint x="620" y="120" />
-        <di:waypoint x="690" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ngonb8_di" bpmnElement="Flow_1ngonb8">
-        <di:waypoint x="790" y="120" />
-        <di:waypoint x="860" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1gn1mz8_di" bpmnElement="Flow_1gn1mz8">
-        <di:waypoint x="960" y="120" />
-        <di:waypoint x="1035" y="120" />
+      <bpmndi:BPMNEdge id="Flow_063oyx7_di" bpmnElement="Flow_063oyx7">
+        <di:waypoint x="420" y="238" />
+        <di:waypoint x="420" y="300" />
+        <di:waypoint x="520" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_089x4hs_di" bpmnElement="Flow_089x4hs">
-        <di:waypoint x="1085" y="120" />
-        <di:waypoint x="1162" y="120" />
+        <di:waypoint x="1085" y="180" />
+        <di:waypoint x="1160" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0phl21t_di" bpmnElement="Flow_0phl21t">
-        <di:waypoint x="1060" y="145" />
-        <di:waypoint x="1060" y="230" />
-        <di:waypoint x="1162" y="230" />
+        <di:waypoint x="1060" y="205" />
+        <di:waypoint x="1060" y="330" />
+        <di:waypoint x="1160" y="330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1069" y="253" width="21" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Activity_0s17vxl_di" bpmnElement="Task_BauvorhabenPlanen">
-        <dc:Bounds x="520" y="80" width="100" height="80" />
+      <bpmndi:BPMNEdge id="Flow_1gn1mz8_di" bpmnElement="Flow_1gn1mz8">
+        <di:waypoint x="960" y="180" />
+        <di:waypoint x="1035" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ngonb8_di" bpmnElement="Flow_1ngonb8">
+        <di:waypoint x="790" y="180" />
+        <di:waypoint x="860" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01gm6ft_di" bpmnElement="Flow_01gm6ft">
+        <di:waypoint x="620" y="180" />
+        <di:waypoint x="690" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_127yzeh_di" bpmnElement="Flow_127yzeh">
+        <di:waypoint x="280" y="155" />
+        <di:waypoint x="280" y="100" />
+        <di:waypoint x="570" y="100" />
+        <di:waypoint x="570" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="415" y="82" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bc7l0l_di" bpmnElement="Flow_0bc7l0l">
+        <di:waypoint x="305" y="180" />
+        <di:waypoint x="350" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h6snud_di" bpmnElement="Flow_1h6snud">
+        <di:waypoint x="208" y="180" />
+        <di:waypoint x="255" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dsbjny_di" bpmnElement="Flow_1dsbjny">
+        <di:waypoint x="450" y="180" />
+        <di:waypoint x="520" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent">
+        <dc:Bounds x="172" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="150" y="205" width="81" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_078vq34_di" bpmnElement="Task_AngebotBearbeiten" bioc:stroke="black" bioc:fill="white">
-        <dc:Bounds x="350" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_0s17vxl_di" bpmnElement="Task_BauvorhabenPlanen">
+        <dc:Bounds x="520" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1ntbjg0_di" bpmnElement="Gateway_1ntbjg0" isMarkerVisible="true">
-        <dc:Bounds x="255" y="95" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_AnfrageErhalten">
-        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <dc:Bounds x="255" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="150" y="145" width="81" height="14" />
+          <dc:Bounds x="249" y="212" width="62" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0vbuqat_di" bpmnElement="Task_AuftragBestaetigen">
-        <dc:Bounds x="690" y="80" width="100" height="80" />
+        <dc:Bounds x="690" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0y2dqpk_di" bpmnElement="Task_LnAbschliessen">
-        <dc:Bounds x="860" y="80" width="100" height="80" />
+        <dc:Bounds x="860" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_02ksvk7_di" bpmnElement="Gateway_02ksvk7" isMarkerVisible="true">
-        <dc:Bounds x="1035" y="95" width="50" height="50" />
+        <dc:Bounds x="1035" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1020" y="125" width="80" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1p9aa2b_di" bpmnElement="Event_1p9aa2b">
-        <dc:Bounds x="1162" y="102" width="36" height="36" />
+        <dc:Bounds x="1312" y="162" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ixlibz_di" bpmnElement="Event_0ixlibz">
-        <dc:Bounds x="1162" y="212" width="36" height="36" />
+        <dc:Bounds x="1312" y="312" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_078vq34_di" bpmnElement="Task_AngebotBearbeiten" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="350" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mquu3v_di" bpmnElement="Event_0mquu3v">
+        <dc:Bounds x="722" y="282" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0rp0zhu_di" bpmnElement="Task_LnKontrollieren">
+        <dc:Bounds x="1160" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sy5hoo_di" bpmnElement="Task_LnKlaeren">
+        <dc:Bounds x="1160" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0v5lk96_di" bpmnElement="Task_Test">
+        <dc:Bounds x="520" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1d4kpib_di" bpmnElement="TimerEvent_ReminderOffer">
+        <dc:Bounds x="402" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="443" y="233" width="34" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
