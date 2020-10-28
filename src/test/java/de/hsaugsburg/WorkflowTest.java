@@ -1,5 +1,6 @@
 package de.hsaugsburg;
 
+
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.spring.boot.starter.test.helper.AbstractProcessEngineRuleTest;
@@ -176,52 +177,6 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
     assertThat(processInstance)
         .isEnded()
         .hasPassed("StartEvent", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
-
-  }
-
-  @Test
-  public void shouldExecuteOrderSlowPath() {
-    /*
-     **************************************
-     * Path: with order and reminder
-     * ************************************
-     * */
-
-    String processDefinitionKey = "bauprozess";
-
-   /* ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
-
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("Task_AngebotBearbeiten")
-        .isNotAssigned();
-
-    assertThat(processInstance)
-        .job("TimerEvent_ReminderOffer");
-    execute(job());
-
-    complete(task());
-
-    assertThat(processInstance)
-        .isEnded();*/
-
-    ProcessInstance instance = runtimeService().createProcessInstanceByKey(processDefinitionKey)
-        .startBeforeActivity("Task_AngebotBearbeiten")
-        .execute();
-
-    assertThat(instance)
-        .job("TimerEvent_ReminderOffer");
-    execute(job());
-
-    complete(task());
-
-    ProcessInstance subInstance = runtimeService().createProcessInstanceByKey(processDefinitionKey)
-        .startBeforeActivity("Task_Test")
-        .execute();
-
-    assertThat(subInstance)
-        .isEnded();
-
 
   }
 
