@@ -117,15 +117,35 @@
       <bpmn:incoming>Flow_1h6snud</bpmn:incoming>
       <bpmn:outgoing>Flow_02h0whc</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:boundaryEvent id="Event_0suqmom" cancelActivity="false" attachedToRef="Task_AngebotBearbeiten">
+    <bpmn:boundaryEvent id="Reminder_Offer" name="3 Tage" cancelActivity="false" attachedToRef="Task_AngebotBearbeiten">
       <bpmn:outgoing>Flow_0quxbv2</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_011aifq">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT3S</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_0quxbv2" sourceRef="Event_0suqmom" targetRef="Activity_00bpdk7" />
-    <bpmn:serviceTask id="Activity_00bpdk7" name="Mail versenden" camunda:delegateExpression="${mailDelegate}">
+    <bpmn:sequenceFlow id="Flow_0quxbv2" sourceRef="Reminder_Offer" targetRef="Service_ReminderOffer" />
+    <bpmn:serviceTask id="Service_ReminderOffer" name="Erinnerungsmail versenden" camunda:delegateExpression="${mailDelegate}">
       <bpmn:incoming>Flow_0quxbv2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rh1omy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_04vzzn7">
+      <bpmn:incoming>Flow_1rh1omy</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1rh1omy" sourceRef="Service_ReminderOffer" targetRef="Event_04vzzn7" />
+    <bpmn:boundaryEvent id="Reminder_Report" name="3 Tage" cancelActivity="false" attachedToRef="Task_LnAbschliessen">
+      <bpmn:outgoing>Flow_03518bh</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1eiwes9">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT3S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_03518bh" sourceRef="Reminder_Report" targetRef="Activity_0o7nx7e" />
+    <bpmn:endEvent id="Event_0fotrkf">
+      <bpmn:incoming>Flow_1rob7kd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1rob7kd" sourceRef="Activity_0o7nx7e" targetRef="Event_0fotrkf" />
+    <bpmn:serviceTask id="Activity_0o7nx7e" name="Erinnerungsmail versenden" camunda:delegateExpression="${mailDelegate}">
+      <bpmn:incoming>Flow_03518bh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rob7kd</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -170,6 +190,22 @@
         <di:waypoint x="1210" y="180" />
         <di:waypoint x="1275" y="180" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0quxbv2_di" bpmnElement="Flow_0quxbv2">
+        <di:waypoint x="670" y="238" />
+        <di:waypoint x="670" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03518bh_di" bpmnElement="Flow_03518bh">
+        <di:waypoint x="1180" y="238" />
+        <di:waypoint x="1180" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rh1omy_di" bpmnElement="Flow_1rh1omy">
+        <di:waypoint x="670" y="370" />
+        <di:waypoint x="670" y="422" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rob7kd_di" bpmnElement="Flow_1rob7kd">
+        <di:waypoint x="1180" y="370" />
+        <di:waypoint x="1180" y="422" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0phl21t_di" bpmnElement="Flow_0phl21t">
         <di:waypoint x="1300" y="205" />
         <di:waypoint x="1300" y="330" />
@@ -193,11 +229,6 @@
         <di:waypoint x="1500" y="330" />
         <di:waypoint x="1552" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0quxbv2_di" bpmnElement="Flow_0quxbv2">
-        <di:waypoint x="670" y="238" />
-        <di:waypoint x="670" y="310" />
-        <di:waypoint x="770" y="310" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_1ntbjg0_di" bpmnElement="Gateway_1ntbjg0" isMarkerVisible="true">
         <dc:Bounds x="475" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -219,6 +250,24 @@
       <bpmndi:BPMNShape id="Activity_0vbuqat_di" bpmnElement="Task_AuftragBestaetigen">
         <dc:Bounds x="940" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_078vq34_di" bpmnElement="Task_AngebotBearbeiten" bioc:stroke="black" bioc:fill="white">
+        <dc:Bounds x="600" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y2dqpk_di" bpmnElement="Task_LnAbschliessen">
+        <dc:Bounds x="1110" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1chfywd_di" bpmnElement="Service_ReminderOffer">
+        <dc:Bounds x="620" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_04vzzn7_di" bpmnElement="Event_04vzzn7">
+        <dc:Bounds x="652" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0fotrkf_di" bpmnElement="Event_0fotrkf">
+        <dc:Bounds x="1162" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01hzw1w_di" bpmnElement="Activity_0o7nx7e">
+        <dc:Bounds x="1130" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_02ksvk7_di" bpmnElement="Gateway_02ksvk7" isMarkerVisible="true">
         <dc:Bounds x="1275" y="155" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -231,23 +280,23 @@
       <bpmndi:BPMNShape id="Event_0ixlibz_di" bpmnElement="Event_0ixlibz">
         <dc:Bounds x="1552" y="312" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_078vq34_di" bpmnElement="Task_AngebotBearbeiten" bioc:stroke="black" bioc:fill="white">
-        <dc:Bounds x="600" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0rp0zhu_di" bpmnElement="Task_LnKontrollieren">
         <dc:Bounds x="1400" y="140" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0sy5hoo_di" bpmnElement="Task_LnKlaeren">
         <dc:Bounds x="1400" y="290" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0y2dqpk_di" bpmnElement="Task_LnAbschliessen">
-        <dc:Bounds x="1110" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1chfywd_di" bpmnElement="Activity_00bpdk7">
-        <dc:Bounds x="770" y="270" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ejqie6_di" bpmnElement="Event_0suqmom">
+      <bpmndi:BPMNShape id="Event_1ejqie6_di" bpmnElement="Reminder_Offer">
         <dc:Bounds x="652" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="683" y="245" width="34" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hhmugy_di" bpmnElement="Reminder_Report">
+        <dc:Bounds x="1162" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1193" y="245" width="34" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
