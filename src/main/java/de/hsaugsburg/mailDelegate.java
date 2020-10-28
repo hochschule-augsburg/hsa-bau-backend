@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class mailDelegate implements JavaDelegate {
 
-    private final TestService testService;
+//    private final TestService testService;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
 
-        testService.sendMail();
+        System.out.println("Erinnerungsmail wurde versendet");
 
     }
 }
