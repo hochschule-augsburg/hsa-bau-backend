@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 //@RequiredArgsConstructor
-public class mailDelegate implements JavaDelegate {
+public class MailDelegate implements JavaDelegate {
 
 //    private final TestService testService;
 
