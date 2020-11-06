@@ -36,12 +36,14 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     String processDefinitionKey = "bauprozess";
 
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
 
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("Task_AngebotBearbeiten")
-        .isNotAssigned();
+    assertThat(processInstance)
+        .isWaitingAt("Task_AufAngebotPruefen");
+    complete(task(), withVariables("offerRequired", true));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_AngebotBearbeiten");
     complete(task());
 
     assertThat(processInstance)
@@ -78,12 +80,14 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     String processDefinitionKey = "bauprozess";
 
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", true));
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
 
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("Task_AngebotBearbeiten")
-        .isNotAssigned();
+    assertThat(processInstance)
+        .isWaitingAt("Task_AufAngebotPruefen");
+    complete(task(), withVariables("offerRequired", true));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_AngebotBearbeiten");
     complete(task());
 
     assertThat(processInstance)
@@ -104,7 +108,7 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     assertThat(processInstance)
         .isEnded()
-        .hasPassed("StartEvent", "Task_AngebotBearbeiten", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
+        .hasPassed("StartEvent", "Task_AufAngebotPruefen", "Task_AngebotBearbeiten", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
 
   }
 
@@ -118,12 +122,14 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     String processDefinitionKey = "bauprozess";
 
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", false));
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
 
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("Task_BauvorhabenPlanen")
-        .isNotAssigned();
+    assertThat(processInstance)
+        .isWaitingAt("Task_AufAngebotPruefen");
+    complete(task(), withVariables("offerRequired", false));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_BauvorhabenPlanen");
     complete(task());
 
     assertThat(processInstance)
@@ -140,7 +146,7 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     assertThat(processInstance)
         .isEnded()
-        .hasPassed("StartEvent", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKontrollieren");
+        .hasPassed("StartEvent", "Task_AufAngebotPruefen", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKontrollieren");
 
   }
 
@@ -154,12 +160,14 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     String processDefinitionKey = "bauprozess";
 
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, withVariables("offerRequired", false));
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
 
-    assertThat(processInstance).isStarted()
-        .task()
-        .hasDefinitionKey("Task_BauvorhabenPlanen")
-        .isNotAssigned();
+    assertThat(processInstance)
+        .isWaitingAt("Task_AufAngebotPruefen");
+    complete(task(), withVariables("offerRequired", false));
+
+    assertThat(processInstance)
+        .isWaitingAt("Task_BauvorhabenPlanen");
     complete(task());
 
     assertThat(processInstance)
@@ -176,8 +184,9 @@ public class WorkflowTest extends AbstractProcessEngineRuleTest {
 
     assertThat(processInstance)
         .isEnded()
-        .hasPassed("StartEvent", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
+        .hasPassed("StartEvent", "Task_AufAngebotPruefen", "Task_BauvorhabenPlanen", "Task_AuftragBestaetigen", "Task_LnAbschliessen", "Task_LnKlaeren");
 
   }
 
 }
+
