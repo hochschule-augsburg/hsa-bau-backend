@@ -1,351 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_06txg7m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
-  <bpmn:process id="bauprozess" name="Bauprozess" isExecutable="true">
-    <bpmn:startEvent id="StartEvent" name="Anfrage erhalten">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="customer" label="Kunde" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="inquiryTitle" label="Titel der Anfrage" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="inquiryDate" label="Anfragedatum" type="date">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="referee" label="Verantwortliche(r) Sachbearbeiter(in)" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_1h6snud</bpmn:outgoing>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1kucj6h" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="bauprozess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0tcsnr2</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_1dsbjny" sourceRef="Task_AngebotBearbeiten" targetRef="Task_BauvorhabenPlanen" />
-    <bpmn:userTask id="Task_BauvorhabenPlanen" name="Bauvorhaben planen" camunda:assignee="demo">
+    <bpmn:sequenceFlow id="Flow_0tcsnr2" sourceRef="StartEvent_1" targetRef="Activity_0b09fiv" />
+    <bpmn:userTask id="Activity_0b09fiv" name="Auftrag zuweisen">
       <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="planningFinished" label="Planungen abgeschlossen?" type="boolean" />
-          <camunda:formField id="packinglist" label="What has to be packed?" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
+        <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
+        <camunda:inputOutput>
+          <camunda:inputParameter name="neuer_status">zugewiesen</camunda:inputParameter>
+        </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1dsbjny</bpmn:incoming>
-      <bpmn:incoming>Flow_127yzeh</bpmn:incoming>
-      <bpmn:outgoing>Flow_01gm6ft</bpmn:outgoing>
+      <bpmn:incoming>Flow_0tcsnr2</bpmn:incoming>
+      <bpmn:outgoing>Flow_0v2r4ff</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_1h6snud" sourceRef="StartEvent" targetRef="Task_AufAngebotPruefen" />
-    <bpmn:exclusiveGateway id="Gateway_1ntbjg0" default="Flow_127yzeh">
-      <bpmn:incoming>Flow_02h0whc</bpmn:incoming>
-      <bpmn:outgoing>Flow_0bc7l0l</bpmn:outgoing>
-      <bpmn:outgoing>Flow_127yzeh</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0bc7l0l" name="ja" sourceRef="Gateway_1ntbjg0" targetRef="Task_AngebotBearbeiten">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${offerRequired}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_127yzeh" name="nein" sourceRef="Gateway_1ntbjg0" targetRef="Task_BauvorhabenPlanen" />
-    <bpmn:sequenceFlow id="Flow_01gm6ft" sourceRef="Task_BauvorhabenPlanen" targetRef="Activity_0igwlwb" />
-    <bpmn:userTask id="Task_AuftragBestaetigen" name="Auftrag bestätigen" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id=" assignmentConfirmed" label="Auftrag bestätigt?" type="boolean" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1fljo8u</bpmn:incoming>
-      <bpmn:outgoing>Flow_1ngonb8</bpmn:outgoing>
+    <bpmn:sequenceFlow id="Flow_0v2r4ff" sourceRef="Activity_0b09fiv" targetRef="Activity_06qhgcz" />
+    <bpmn:userTask id="Activity_06qhgcz" name="Auftrag abschließen">
+      <bpmn:incoming>Flow_0v2r4ff</bpmn:incoming>
+      <bpmn:outgoing>Flow_1j3heni</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_1ngonb8" sourceRef="Task_AuftragBestaetigen" targetRef="Task_LnAbschliessen" />
-    <bpmn:exclusiveGateway id="Gateway_02ksvk7" name="Nachweis unterschrieben?" default="Flow_0phl21t">
-      <bpmn:incoming>Flow_1gn1mz8</bpmn:incoming>
-      <bpmn:outgoing>Flow_0phl21t</bpmn:outgoing>
-      <bpmn:outgoing>Flow_089x4hs</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_1gn1mz8" sourceRef="Task_LnAbschliessen" targetRef="Gateway_02ksvk7" />
-    <bpmn:endEvent id="Event_1p9aa2b">
-      <bpmn:incoming>Flow_0i4tl3q</bpmn:incoming>
+    <bpmn:endEvent id="Event_0bf6dwx">
+      <bpmn:incoming>Flow_1j3heni</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_0ixlibz">
-      <bpmn:incoming>Flow_0j3xqpn</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0phl21t" name="nein" sourceRef="Gateway_02ksvk7" targetRef="Task_LnKlaeren" />
-    <bpmn:sequenceFlow id="Flow_089x4hs" name="ja" sourceRef="Gateway_02ksvk7" targetRef="Task_LnKontrollieren">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${reportSigned}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:userTask id="Task_AngebotBearbeiten" name="Angebot bearbeiten" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="orderNumber" label="Angebotsnummer" type="long">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="orderDate" label="Angebotsdatum" type="date">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="orderTitle" label="Titel des Angebots" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="referee" label="Verantwortliche(r) Sachbearbeiter(in)" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0bc7l0l</bpmn:incoming>
-      <bpmn:outgoing>Flow_1dsbjny</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0i4tl3q" sourceRef="Task_LnKontrollieren" targetRef="Event_1p9aa2b" />
-    <bpmn:userTask id="Task_LnKontrollieren" name="Leistungs-&#10;nachweis kontrollieren" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="reportControlled" label="Leistungsnachweis kontrolliert?" type="boolean" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_089x4hs</bpmn:incoming>
-      <bpmn:outgoing>Flow_0i4tl3q</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0j3xqpn" sourceRef="Task_LnKlaeren" targetRef="Event_0ixlibz" />
-    <bpmn:userTask id="Task_LnKlaeren" name="Leistungs-nachweis&#10;klären" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="reportClarified" label="Leistungsnachweis geklärt?" type="boolean" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0phl21t</bpmn:incoming>
-      <bpmn:outgoing>Flow_0j3xqpn</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="Task_LnAbschliessen" name="Leistungs-nachweis abschließen" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="reportFinished" label="Leistungsnachweis abgeschlossen?" type="boolean" />
-          <camunda:formField id="reportSigned" label="Leistungsnachweis unterschrieben?" type="boolean" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1ngonb8</bpmn:incoming>
-      <bpmn:outgoing>Flow_1gn1mz8</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_02h0whc" sourceRef="Task_AufAngebotPruefen" targetRef="Gateway_1ntbjg0" />
-    <bpmn:userTask id="Task_AufAngebotPruefen" name="Prüfen ob Angebot notwendig" camunda:assignee="demo">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="offerRequired" label="Angebot erforderlich?" type="boolean" />
-        </camunda:formData>
-        <camunda:taskListener delegateExpression="" event="timeout" id="timer">
-          <bpmn:timerEventDefinition id="TimerEventDefinition_1u1eob7">
-            <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30S</bpmn:timeDuration>
-          </bpmn:timerEventDefinition>
-        </camunda:taskListener>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1h6snud</bpmn:incoming>
-      <bpmn:outgoing>Flow_02h0whc</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:boundaryEvent id="Reminder_Offer" name="3 Tage" cancelActivity="false" attachedToRef="Task_AngebotBearbeiten">
-      <bpmn:outgoing>Flow_0quxbv2</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_011aifq">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT3S</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_0quxbv2" sourceRef="Reminder_Offer" targetRef="Service_ReminderOffer" />
-    <bpmn:serviceTask id="Service_ReminderOffer" name="Erinnerungsmail versenden" camunda:delegateExpression="${mailDelegate}">
-      <bpmn:incoming>Flow_0quxbv2</bpmn:incoming>
-      <bpmn:outgoing>Flow_1rh1omy</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="Event_04vzzn7">
-      <bpmn:incoming>Flow_1rh1omy</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1rh1omy" sourceRef="Service_ReminderOffer" targetRef="Event_04vzzn7" />
-    <bpmn:boundaryEvent id="Reminder_Report" name="3 Tage" cancelActivity="false" attachedToRef="Task_LnAbschliessen">
-      <bpmn:outgoing>Flow_03518bh</bpmn:outgoing>
-      <bpmn:timerEventDefinition id="TimerEventDefinition_1eiwes9">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT3S</bpmn:timeDuration>
-      </bpmn:timerEventDefinition>
-    </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_03518bh" sourceRef="Reminder_Report" targetRef="Activity_0o7nx7e" />
-    <bpmn:endEvent id="Event_0fotrkf">
-      <bpmn:incoming>Flow_1rob7kd</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_1rob7kd" sourceRef="Activity_0o7nx7e" targetRef="Event_0fotrkf" />
-    <bpmn:serviceTask id="Activity_0o7nx7e" name="Erinnerungsmail versenden" camunda:delegateExpression="${mailDelegate}">
-      <bpmn:incoming>Flow_03518bh</bpmn:incoming>
-      <bpmn:outgoing>Flow_1rob7kd</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1fljo8u" sourceRef="Activity_0igwlwb" targetRef="Task_AuftragBestaetigen" />
-    <bpmn:serviceTask id="Activity_0igwlwb" name="Packliste anzeigen" camunda:delegateExpression="${packlisteDelegate}">
-      <bpmn:incoming>Flow_01gm6ft</bpmn:incoming>
-      <bpmn:outgoing>Flow_1fljo8u</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1j3heni" sourceRef="Activity_06qhgcz" targetRef="Event_0bf6dwx" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="bauprozess">
-      <bpmndi:BPMNEdge id="Flow_1fljo8u_di" bpmnElement="Flow_1fljo8u">
-        <di:waypoint x="1050" y="180" />
-        <di:waypoint x="1130" y="180" />
+      <bpmndi:BPMNEdge id="Flow_0tcsnr2_di" bpmnElement="Flow_0tcsnr2">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="240" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rob7kd_di" bpmnElement="Flow_1rob7kd">
-        <di:waypoint x="1370" y="370" />
-        <di:waypoint x="1370" y="422" />
+      <bpmndi:BPMNEdge id="Flow_0v2r4ff_di" bpmnElement="Flow_0v2r4ff">
+        <di:waypoint x="340" y="120" />
+        <di:waypoint x="410" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_03518bh_di" bpmnElement="Flow_03518bh">
-        <di:waypoint x="1370" y="238" />
-        <di:waypoint x="1370" y="290" />
+      <bpmndi:BPMNEdge id="Flow_1j3heni_di" bpmnElement="Flow_1j3heni">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="572" y="120" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1rh1omy_di" bpmnElement="Flow_1rh1omy">
-        <di:waypoint x="670" y="370" />
-        <di:waypoint x="670" y="422" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0quxbv2_di" bpmnElement="Flow_0quxbv2">
-        <di:waypoint x="670" y="238" />
-        <di:waypoint x="670" y="290" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_02h0whc_di" bpmnElement="Flow_02h0whc">
-        <di:waypoint x="410" y="180" />
-        <di:waypoint x="475" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0j3xqpn_di" bpmnElement="Flow_0j3xqpn">
-        <di:waypoint x="1690" y="330" />
-        <di:waypoint x="1742" y="330" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0i4tl3q_di" bpmnElement="Flow_0i4tl3q">
-        <di:waypoint x="1690" y="180" />
-        <di:waypoint x="1742" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_089x4hs_di" bpmnElement="Flow_089x4hs">
-        <di:waypoint x="1515" y="180" />
-        <di:waypoint x="1590" y="180" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1549" y="162" width="9" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0phl21t_di" bpmnElement="Flow_0phl21t">
-        <di:waypoint x="1490" y="205" />
-        <di:waypoint x="1490" y="330" />
-        <di:waypoint x="1590" y="330" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1495" y="265" width="22" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1gn1mz8_di" bpmnElement="Flow_1gn1mz8">
-        <di:waypoint x="1400" y="180" />
-        <di:waypoint x="1465" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ngonb8_di" bpmnElement="Flow_1ngonb8">
-        <di:waypoint x="1230" y="180" />
-        <di:waypoint x="1300" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_01gm6ft_di" bpmnElement="Flow_01gm6ft">
-        <di:waypoint x="870" y="180" />
-        <di:waypoint x="950" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_127yzeh_di" bpmnElement="Flow_127yzeh">
-        <di:waypoint x="500" y="155" />
-        <di:waypoint x="500" y="100" />
-        <di:waypoint x="820" y="100" />
-        <di:waypoint x="820" y="140" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="650" y="82" width="21" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0bc7l0l_di" bpmnElement="Flow_0bc7l0l">
-        <di:waypoint x="525" y="180" />
-        <di:waypoint x="600" y="180" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="559" y="162" width="8" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1h6snud_di" bpmnElement="Flow_1h6snud">
-        <di:waypoint x="218" y="180" />
-        <di:waypoint x="310" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1dsbjny_di" bpmnElement="Flow_1dsbjny">
-        <di:waypoint x="700" y="180" />
-        <di:waypoint x="770" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent">
-        <dc:Bounds x="182" y="162" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="160" y="205" width="81" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0s17vxl_di" bpmnElement="Task_BauvorhabenPlanen">
-        <dc:Bounds x="770" y="140" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_01ssxiv_di" bpmnElement="Activity_0b09fiv">
+        <dc:Bounds x="240" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1ntbjg0_di" bpmnElement="Gateway_1ntbjg0" isMarkerVisible="true">
-        <dc:Bounds x="475" y="155" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="469" y="212" width="62" height="27" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_1oput30_di" bpmnElement="Activity_06qhgcz">
+        <dc:Bounds x="410" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0vbuqat_di" bpmnElement="Task_AuftragBestaetigen">
-        <dc:Bounds x="1130" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_02ksvk7_di" bpmnElement="Gateway_02ksvk7" isMarkerVisible="true">
-        <dc:Bounds x="1465" y="155" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1451" y="125" width="80" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1p9aa2b_di" bpmnElement="Event_1p9aa2b">
-        <dc:Bounds x="1742" y="162" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0ixlibz_di" bpmnElement="Event_0ixlibz">
-        <dc:Bounds x="1742" y="312" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_078vq34_di" bpmnElement="Task_AngebotBearbeiten" bioc:stroke="black" bioc:fill="white">
-        <dc:Bounds x="600" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0rp0zhu_di" bpmnElement="Task_LnKontrollieren">
-        <dc:Bounds x="1590" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0sy5hoo_di" bpmnElement="Task_LnKlaeren">
-        <dc:Bounds x="1590" y="290" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0y2dqpk_di" bpmnElement="Task_LnAbschliessen">
-        <dc:Bounds x="1300" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1m3oh8z_di" bpmnElement="Task_AufAngebotPruefen">
-        <dc:Bounds x="310" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1chfywd_di" bpmnElement="Service_ReminderOffer">
-        <dc:Bounds x="620" y="290" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_04vzzn7_di" bpmnElement="Event_04vzzn7">
-        <dc:Bounds x="652" y="422" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0fotrkf_di" bpmnElement="Event_0fotrkf">
-        <dc:Bounds x="1352" y="422" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_01hzw1w_di" bpmnElement="Activity_0o7nx7e">
-        <dc:Bounds x="1320" y="290" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_15jwfck_di" bpmnElement="Activity_0igwlwb">
-        <dc:Bounds x="950" y="140" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1hhmugy_di" bpmnElement="Reminder_Report">
-        <dc:Bounds x="1352" y="202" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1383" y="245" width="34" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1ejqie6_di" bpmnElement="Reminder_Offer">
-        <dc:Bounds x="652" y="202" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="683" y="245" width="34" height="14" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Event_0bf6dwx_di" bpmnElement="Event_0bf6dwx">
+        <dc:Bounds x="572" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
