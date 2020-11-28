@@ -3,7 +3,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/hsabau?serverTimezone=UTC&nullDatabaseMeansCurrent=true"  # TODO!
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: "root"
-    password: "passwort"
+    password: "apfel"
   jpa:
     properties:
       hibernate:

@@ -40,10 +40,32 @@ public class AuftragService {
         return this.auftragMapper.map(auftraege);
     }
 
+    public void auftragEntfernen(final String id) {
+        this.auftragJpaRepository.findById(id)
+            .orElseThrow(() -> new ObjectNotFoundException(String.format("Auftrag mit der Id %s ist nicht vorhanden", id)));
+        this.auftragJpaRepository.deleteById(id);
+    }
+
     public void auftragZuweisen(final String id, final String monteur, final String taskId) {
         val auftrag = this.auftragLaden(id);
         auftrag.zuweisen(monteur);
         this.auftragSpeichern(auftrag);
+        this.taskService.complete(taskId);
+    }
+
+    public void lnAbschliessen(final String id, final String taskId) {
+        this.taskService.complete(taskId);
+    }
+
+    public void lnGenehmigen(final String id, final String taskId) {
+        this.taskService.complete(taskId);
+    }
+
+    public void lnPruefen(final String id, final String taskId) {
+        this.taskService.complete(taskId);
+    }
+
+    public void lnFreigeben(final String id, final String taskId) {
         this.taskService.complete(taskId);
     }
 
