@@ -1,9 +1,5 @@
 package de.hsaugsburg.kunde.domain;
 
-
-import de.hsaugsburg.auftrag.api.to.AuftragTO;
-import de.hsaugsburg.auftrag.domain.model.Auftrag;
-import de.hsaugsburg.auftrag.infrastructure.AuftragEntity;
 import de.hsaugsburg.kunde.api.to.NeuerKundeTO;
 import de.hsaugsburg.kunde.domain.model.NeuerKunde;
 import de.hsaugsburg.kunde.infrastructure.KundeEntity;

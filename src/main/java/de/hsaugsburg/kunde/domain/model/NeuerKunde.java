@@ -1,7 +1,5 @@
 package de.hsaugsburg.kunde.domain.model;
 
-
-import de.hsaugsburg.auftrag.domain.model.NeuerAuftrag;
 import lombok.*;
 
 @Getter

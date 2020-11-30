@@ -1,6 +1,5 @@
 package de.hsaugsburg.kunde.api;
 
-import de.hsaugsburg.auftrag.api.to.AuftragTO;
 import de.hsaugsburg.kunde.api.to.NeuerKundeTO;
 import de.hsaugsburg.kunde.domain.KundenMapper;
 import de.hsaugsburg.kunde.domain.KundenService;

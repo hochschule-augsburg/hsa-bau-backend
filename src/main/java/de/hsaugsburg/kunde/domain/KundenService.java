@@ -1,7 +1,5 @@
 package de.hsaugsburg.kunde.domain;
 
-
-import de.hsaugsburg.auftrag.domain.model.Auftrag;
 import de.hsaugsburg.kunde.domain.model.NeuerKunde;
 import de.hsaugsburg.kunde.infrastructure.repos.KundenJpaRepository;
 import de.hsaugsburg.shared.exception.ObjectNotFoundException;
