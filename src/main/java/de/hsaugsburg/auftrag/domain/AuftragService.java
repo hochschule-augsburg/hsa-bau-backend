@@ -2,7 +2,7 @@ package de.hsaugsburg.auftrag.domain;
 
 import de.hsaugsburg.auftrag.domain.model.Auftrag;
 import de.hsaugsburg.auftrag.domain.model.NeuerAuftrag;
-import de.hsaugsburg.auftrag.infrastructure.AuftragJpaRepository;
+import de.hsaugsburg.auftrag.infrastructure.repos.AuftragJpaRepository;
 import de.hsaugsburg.shared.exception.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

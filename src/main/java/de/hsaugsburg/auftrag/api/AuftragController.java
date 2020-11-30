@@ -7,6 +7,7 @@ import de.hsaugsburg.auftrag.api.to.statusAenderungTO;
 import de.hsaugsburg.auftrag.api.to.NeuerAuftragTO;
 import de.hsaugsburg.auftrag.domain.AuftragMapper;
 import de.hsaugsburg.auftrag.domain.AuftragService;
+import de.hsaugsburg.kunde.domain.KundenService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,12 @@ public class AuftragController {
 
     private final AuftragService auftragService;
     private final AuftragMapper auftragMapper;
+    private final KundenService kundenService;
 
-    @PostMapping
-    public ResponseEntity<AuftragTO> auftragEinplanen(@RequestBody @Valid final NeuerAuftragTO neuerAuftragTO) {
+    @PostMapping("/{kundenId}")
+    public ResponseEntity<AuftragTO> auftragEinplanen(@RequestBody @Valid final NeuerAuftragTO neuerAuftragTO, @PathVariable("kundenId") final String id) {
+        val kunde = this.kundenService.kundeLaden(id);
+        neuerAuftragTO.setKunde(kunde.getName());
         val model = this.auftragService.auftragEinplanen(this.auftragMapper.map(neuerAuftragTO));
         return ResponseEntity.ok(this.auftragMapper.map2TO(model));
     }

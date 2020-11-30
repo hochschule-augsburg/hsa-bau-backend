@@ -44,22 +44,23 @@ public class AuftragMapper {
                 .build();
     }
 
+    public AuftragTO map2TO(final Auftrag model) {
+        return AuftragTO.builder()
+            .id(model.getId())
+            .bauvorhaben(model.getBauvorhaben())
+            .kunde(model.getKunde())
+            .name(model.getName())
+            .monteur(model.getMonteur())
+            .status(model.getStatus())
+            .build();
+    }
+
     public List<Auftrag> map(final List<AuftragEntity> entities) {
         return entities.stream()
                 .map(this::map)
                 .collect(Collectors.toList());
     }
 
-    public AuftragTO map2TO(final Auftrag model) {
-        return AuftragTO.builder()
-                .id(model.getId())
-                .bauvorhaben(model.getBauvorhaben())
-                .kunde(model.getKunde())
-                .name(model.getName())
-                .monteur(model.getMonteur())
-                .status(model.getStatus())
-                .build();
-    }
 
     public List<AuftragTO> map2TO(final List<Auftrag> models) {
         return models.stream()

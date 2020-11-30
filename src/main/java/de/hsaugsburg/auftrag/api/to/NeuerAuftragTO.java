@@ -13,7 +13,6 @@ public class NeuerAuftragTO {
     @NotBlank
     private String bauvorhaben;
 
-    @NotBlank
     private String kunde;
 
 }
