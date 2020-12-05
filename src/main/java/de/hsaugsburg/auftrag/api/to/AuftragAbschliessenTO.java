@@ -1,19 +1,18 @@
 package de.hsaugsburg.auftrag.api.to;
 
+
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class NeuerAuftragTO {
+@Builder
+public class AuftragAbschliessenTO {
 
     @NotBlank
-    private String name;
+    private String auftragId;
 
     @NotBlank
-    private String bauvorhaben;
-
-    @NotBlank
-    private String kundeId;
-
+    private String taskId;
 }

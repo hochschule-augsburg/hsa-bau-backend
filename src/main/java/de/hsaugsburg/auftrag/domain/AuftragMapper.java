@@ -17,7 +17,7 @@ public class AuftragMapper {
     public NeuerAuftrag map(final NeuerAuftragTO to) {
         return NeuerAuftrag.builder()
                 .bauvorhaben(to.getBauvorhaben())
-                .kunde(to.getKunde())
+                .kundeId(to.getKundeId())
                 .name(to.getName())
                 .build();
     }
@@ -46,13 +46,13 @@ public class AuftragMapper {
 
     public AuftragTO map2TO(final Auftrag model) {
         return AuftragTO.builder()
-            .id(model.getId())
-            .bauvorhaben(model.getBauvorhaben())
-            .kunde(model.getKunde())
-            .name(model.getName())
-            .monteur(model.getMonteur())
-            .status(model.getStatus())
-            .build();
+                .id(model.getId())
+                .bauvorhaben(model.getBauvorhaben())
+                .kunde(model.getKunde())
+                .name(model.getName())
+                .monteur(model.getMonteur())
+                .status(model.getStatus())
+                .build();
     }
 
     public List<Auftrag> map(final List<AuftragEntity> entities) {

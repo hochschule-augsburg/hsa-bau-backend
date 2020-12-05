@@ -13,6 +13,6 @@ public class NeuerAuftrag {
 
     private final String name;
 
-    private final String kunde;
+    private final String kundeId;
 
 }
