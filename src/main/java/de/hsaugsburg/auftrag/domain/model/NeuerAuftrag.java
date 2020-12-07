@@ -15,4 +15,6 @@ public class NeuerAuftrag {
 
     private final String kunde;
 
+    private final String status;
+
 }

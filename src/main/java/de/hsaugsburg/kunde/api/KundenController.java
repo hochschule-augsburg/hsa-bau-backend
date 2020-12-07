@@ -15,6 +15,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/restapi/kunde")
 public class KundenController {
 

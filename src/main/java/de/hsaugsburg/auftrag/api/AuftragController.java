@@ -20,6 +20,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/restapi/auftrag")
 public class AuftragController {
 
@@ -27,9 +28,9 @@ public class AuftragController {
     private final AuftragMapper auftragMapper;
     private final KundenService kundenService;
 
-    @PostMapping("/{kundenId}")
-    public ResponseEntity<AuftragTO> auftragEinplanen(@RequestBody @Valid final NeuerAuftragTO neuerAuftragTO, @PathVariable("kundenId") final String id) {
-        val kunde = this.kundenService.kundeLaden(id);
+    @PostMapping
+    public ResponseEntity<AuftragTO> auftragEinplanen(@RequestBody @Valid final NeuerAuftragTO neuerAuftragTO) {
+        val kunde = this.kundenService.kundeLaden(neuerAuftragTO.getKundenId());
         neuerAuftragTO.setKunde(kunde.getName());
         val model = this.auftragService.auftragEinplanen(this.auftragMapper.map(neuerAuftragTO));
         return ResponseEntity.ok(this.auftragMapper.map2TO(model));
