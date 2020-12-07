@@ -5,7 +5,7 @@
       <bpmn:outgoing>Flow_0tcsnr2</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0tcsnr2" sourceRef="Event_Startevent" targetRef="Task_zuweisen" />
-    <bpmn:userTask id="Task_zuweisen" name="Auftrag zuweisen">
+    <bpmn:userTask id="Task_zuweisen" name="Zuweisen">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
         <camunda:inputOutput>
@@ -16,7 +16,7 @@
       <bpmn:outgoing>Flow_0v2r4ff</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_0v2r4ff" sourceRef="Task_zuweisen" targetRef="Task_abschliessen" />
-    <bpmn:userTask id="Task_abschliessen" name="Leistungs-nachweis&#10;abschließen">
+    <bpmn:userTask id="Task_abschliessen" name="Abschließen">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
         <camunda:inputOutput>
@@ -30,7 +30,7 @@
       <bpmn:incoming>Flow_0rum8l7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1j3heni" sourceRef="Task_abschliessen" targetRef="Task_genehmigen" />
-    <bpmn:userTask id="Task_genehmigen" name="Leistungs-nachweis&#10;genehmigen">
+    <bpmn:userTask id="Task_genehmigen" name="Genehmigen">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
         <camunda:inputOutput>
@@ -40,7 +40,7 @@
       <bpmn:incoming>Flow_1j3heni</bpmn:incoming>
       <bpmn:outgoing>Flow_0nds864</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_pruefen" name="Leistungs-nachweis&#10;überprüfen">
+    <bpmn:userTask id="Task_pruefen" name="Überprüfen">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
         <camunda:inputOutput>
@@ -53,7 +53,7 @@
     <bpmn:sequenceFlow id="Flow_0nds864" sourceRef="Task_genehmigen" targetRef="Task_pruefen" />
     <bpmn:sequenceFlow id="Flow_1igntra" sourceRef="Task_pruefen" targetRef="Task_freigeben" />
     <bpmn:sequenceFlow id="Flow_0rum8l7" sourceRef="Task_freigeben" targetRef="Event_Endevent" />
-    <bpmn:userTask id="Task_freigeben" name="Leistungs-nachweis&#10;freigeben">
+    <bpmn:userTask id="Task_freigeben" name="Freigeben">
       <bpmn:extensionElements>
         <camunda:executionListener delegateExpression="${statusAendernDelegate}" event="end" />
         <camunda:inputOutput>
