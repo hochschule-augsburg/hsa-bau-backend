@@ -24,7 +24,7 @@ public class Auftrag {
     public Auftrag(final NeuerAuftrag neuerAuftrag) {
         this.bauvorhaben = neuerAuftrag.getBauvorhaben();
         this.name = neuerAuftrag.getName();
-        this.kunde = neuerAuftrag.getKunde();
+        this.kunde = neuerAuftrag.getKundeId();
     }
 
     public void zuweisen(final String monteur) {

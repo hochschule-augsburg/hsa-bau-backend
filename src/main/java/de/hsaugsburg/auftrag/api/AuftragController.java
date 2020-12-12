@@ -1,10 +1,7 @@
 package de.hsaugsburg.auftrag.api;
 
 
-import de.hsaugsburg.auftrag.api.to.AuftragTO;
-import de.hsaugsburg.auftrag.api.to.AuftragZuweisenTO;
-import de.hsaugsburg.auftrag.api.to.statusAenderungTO;
-import de.hsaugsburg.auftrag.api.to.NeuerAuftragTO;
+import de.hsaugsburg.auftrag.api.to.*;
 import de.hsaugsburg.auftrag.domain.AuftragMapper;
 import de.hsaugsburg.auftrag.domain.AuftragService;
 import de.hsaugsburg.kunde.domain.KundenService;
@@ -30,8 +27,6 @@ public class AuftragController {
 
     @PostMapping
     public ResponseEntity<AuftragTO> auftragEinplanen(@RequestBody @Valid final NeuerAuftragTO neuerAuftragTO) {
-        val kunde = this.kundenService.kundeLaden(neuerAuftragTO.getKundenId());
-        neuerAuftragTO.setKunde(kunde.getName());
         val model = this.auftragService.auftragEinplanen(this.auftragMapper.map(neuerAuftragTO));
         return ResponseEntity.ok(this.auftragMapper.map2TO(model));
     }
@@ -61,26 +56,26 @@ public class AuftragController {
     }
 
     @PostMapping("/abschliessen")
-    public ResponseEntity<Void> lnAbschliessen(@RequestBody @Valid final statusAenderungTO statusAenderungTO) {
-        this.auftragService.lnAbschliessen(statusAenderungTO.getAuftragId(), statusAenderungTO.getTaskId());
+    public ResponseEntity<Void> auftragAbschliessen(@RequestBody @Valid final AuftragAbschliessenTO auftragAbschliessenTO) {
+        this.auftragService.auftragAbschliessen(auftragAbschliessenTO.getAuftragId(), auftragAbschliessenTO.getTaskId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/genehmigen")
-    public ResponseEntity<Void> lnGenehmigen(@RequestBody @Valid final statusAenderungTO statusAenderungTO) {
-        this.auftragService.lnGenehmigen(statusAenderungTO.getAuftragId(), statusAenderungTO.getTaskId());
+    public ResponseEntity<Void> auftragGenehmigen(@RequestBody @Valid final AuftragGenehmigenTO auftragGenehmigenTO) {
+        this.auftragService.auftragGenehmigen(auftragGenehmigenTO.getAuftragId(), auftragGenehmigenTO.getTaskId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/pruefen")
-    public ResponseEntity<Void> lnPruefen(@RequestBody @Valid final statusAenderungTO statusAenderungTO) {
-        this.auftragService.lnPruefen(statusAenderungTO.getAuftragId(), statusAenderungTO.getTaskId());
+    public ResponseEntity<Void> auftragPruefen(@RequestBody @Valid final AuftragPruefenTO auftragPruefenTO) {
+        this.auftragService.auftragPruefen(auftragPruefenTO.getAuftragId(), auftragPruefenTO.getTaskId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/freigeben")
-    public ResponseEntity<Void> lnFreigeben(@RequestBody @Valid final statusAenderungTO statusAenderungTO) {
-        this.auftragService.lnFreigeben(statusAenderungTO.getAuftragId(), statusAenderungTO.getTaskId());
+    public ResponseEntity<Void> auftragFreigeben(@RequestBody @Valid final AuftragFreigebenTO auftragFreigebenTO) {
+        this.auftragService.auftragFreigeben(auftragFreigebenTO.getAuftragId(), auftragFreigebenTO.getTaskId());
         return ResponseEntity.ok().build();
     }
 
