@@ -8,6 +8,9 @@ import javax.validation.constraints.NotBlank;
 public class NeuerAuftragTO {
 
     @NotBlank
+    private String kundenId;
+
+    @NotBlank
     private String name;
 
     @NotBlank
