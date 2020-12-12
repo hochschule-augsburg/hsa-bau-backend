@@ -52,6 +52,8 @@ public class AuftragController {
     public ResponseEntity<String> auftragEntfernen(@PathVariable("id") final String id) {
         this.auftragService.auftragEntfernen(id);
         return ResponseEntity.ok("Auftrag gelöscht");
+
+        // #TODO: Beim Löschen eines Auftrages muss auch die aktive Instanz gelöscht werden
     }
 
     @PostMapping("/zuweisen")
