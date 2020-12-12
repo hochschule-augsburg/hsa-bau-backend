@@ -16,6 +16,7 @@ public class NeuerAuftragTO {
     @NotBlank
     private String bauvorhaben;
 
-    private String kunde;
+    @NotBlank
+    private String kundeId;
 
 }

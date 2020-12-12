@@ -3,12 +3,15 @@ package de.hsaugsburg.auftrag.domain;
 import de.hsaugsburg.auftrag.domain.model.Auftrag;
 import de.hsaugsburg.auftrag.domain.model.NeuerAuftrag;
 import de.hsaugsburg.auftrag.infrastructure.repos.AuftragJpaRepository;
+import de.hsaugsburg.kunde.domain.KundenService;
 import de.hsaugsburg.shared.exception.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -21,9 +24,16 @@ public class AuftragService {
 
     private final RuntimeService runtimeService;
     private final TaskService taskService;
+    private final KundenService kundenService;
 
     public Auftrag auftragEinplanen(final NeuerAuftrag neuerAuftrag) {
         val auftrag = new Auftrag(neuerAuftrag);
+
+        //kunde vorhanden?
+        if (!this.kundenService.kundeVorhanden(neuerAuftrag.getKundeId())) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+        }
+
         val savedAuftrag = this.auftragSpeichern(auftrag);
         this.runtimeService.startProcessInstanceByKey("bauprozess", savedAuftrag.getId());
         return savedAuftrag;
@@ -42,8 +52,9 @@ public class AuftragService {
 
     public void auftragEntfernen(final String id) {
         this.auftragJpaRepository.findById(id)
-            .orElseThrow(() -> new ObjectNotFoundException(String.format("Auftrag mit der Id %s ist nicht vorhanden", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Auftrag mit der Id %s ist nicht vorhanden", id)));
         this.auftragJpaRepository.deleteById(id);
+        this.runtimeService.deleteProcessInstance("businessKey", id);
     }
 
     public void auftragZuweisen(final String id, final String monteur, final String taskId) {
@@ -53,19 +64,19 @@ public class AuftragService {
         this.taskService.complete(taskId);
     }
 
-    public void lnAbschliessen(final String id, final String taskId) {
+    public void auftragAbschliessen(final String id, final String taskId) {
         this.taskService.complete(taskId);
     }
 
-    public void lnGenehmigen(final String id, final String taskId) {
+    public void auftragGenehmigen(final String id, final String taskId) {
         this.taskService.complete(taskId);
     }
 
-    public void lnPruefen(final String id, final String taskId) {
+    public void auftragPruefen(final String id, final String taskId) {
         this.taskService.complete(taskId);
     }
 
-    public void lnFreigeben(final String id, final String taskId) {
+    public void auftragFreigeben(final String id, final String taskId) {
         this.taskService.complete(taskId);
     }
 
